@@ -81,7 +81,7 @@ export function Hero() {
           </h1>
         </motion.div>
 
-        <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 xl:gap-8 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 xl:gap-8 items-stretch">
           {/* Left video */}
           <motion.div
             initial={{ x: -40 }}
@@ -111,7 +111,7 @@ export function Hero() {
             initial={{ y: 40 }}
             animate={{ y: 0 }}
             transition={{ duration: 0.8, delay: 0.25, ease: EASE }}
-            className="aspect-[3/4] md:aspect-auto md:h-[78vh] md:min-h-130 -mt-2 mb-2 md:-mt-8 md:mb-8 z-10"
+            className="aspect-[3/4] md:aspect-auto md:h-[78vh] md:min-h-130 md:-mt-8 md:mb-8 z-10 order-first md:order-none"
           >
             <motion.div
               style={{ rotateX: middle.rotateX, rotateY: middle.rotateY, transformStyle: "preserve-3d" }}
@@ -126,9 +126,8 @@ export function Hero() {
                 className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-              {/* CTA inside the panel — desktop only; on mobile it moves below the grid */}
               <div
-                className="hidden md:block absolute bottom-0 inset-x-0 p-6 md:p-8 text-center"
+                className="absolute bottom-0 inset-x-0 p-6 md:p-8 text-center"
                 style={{ transform: "translateZ(40px)" }}
               >
                 <Link
@@ -162,21 +161,11 @@ export function Hero() {
                 className="absolute inset-0 w-full h-full object-cover grayscale-25"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-              <p className="hidden md:block absolute bottom-4 inset-x-0 text-center text-xs uppercase tracking-[0.3em] text-white/70">
+              <p className="absolute bottom-4 inset-x-0 text-center text-xs uppercase tracking-[0.3em] text-white/70">
                 @dn8team
               </p>
             </motion.div>
           </motion.div>
-        </div>
-
-        {/* Mobile CTA below the 3-column grid */}
-        <div className="md:hidden mt-8 text-center">
-          <Link
-            href="/collections"
-            className="inline-block px-10 py-3.5 rounded-full bg-foreground text-background text-sm font-semibold uppercase tracking-wider active:scale-95 transition-transform"
-          >
-            {t("hero.shopNow")}
-          </Link>
         </div>
       </div>
     </section>
