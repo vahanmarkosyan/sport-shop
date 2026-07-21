@@ -21,6 +21,8 @@ function useTilt(strength: number) {
   return { x, y, rotateX, rotateY };
 }
 
+const EASE = [0.22, 1, 0.36, 1] as const;
+
 export function Hero() {
   const { t } = useLang();
   const ref = useRef<HTMLDivElement>(null);
@@ -33,21 +35,23 @@ export function Hero() {
     if (!rect) return;
     const px = (e.clientX - rect.left) / rect.width - 0.5;
     const py = (e.clientY - rect.top) / rect.height - 0.5;
-    for (const t of [left, middle, right]) {
-      t.x.set(px);
-      t.y.set(py);
+    for (const tilt of [left, middle, right]) {
+      tilt.x.set(px);
+      tilt.y.set(py);
     }
   };
 
   const onMouseLeave = () => {
-    for (const t of [left, middle, right]) {
-      t.x.set(0);
-      t.y.set(0);
+    for (const tilt of [left, middle, right]) {
+      tilt.x.set(0);
+      tilt.y.set(0);
     }
   };
 
+  // Entrance animations move panels but never hide them (no opacity),
+  // so the hero stays visible even if animations fail to run.
   const panel =
-    "relative rounded-2xl overflow-hidden border border-line bg-surface shadow-2xl shadow-black/60 will-change-transform";
+    "relative w-full h-full rounded-2xl overflow-hidden border border-line bg-surface shadow-2xl shadow-black/60 will-change-transform";
 
   return (
     <section
@@ -64,9 +68,9 @@ export function Hero() {
 
       <div className="w-full px-4 sm:px-6 lg:px-10 pt-14 md:pt-20 pb-16">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ y: 30 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.7, ease: EASE }}
           className="text-center mb-14 md:mb-20"
         >
           <p className="text-xs md:text-sm uppercase tracking-[0.35em] text-muted mb-4">
@@ -77,74 +81,102 @@ export function Hero() {
           </h1>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 xl:gap-8 items-stretch">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 xl:gap-8 items-stretch">
           {/* Left video */}
           <motion.div
-            initial={{ opacity: 0, x: -60, rotateY: 20 }}
-            animate={{ opacity: 1, x: 0, rotateY: 0 }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            style={{ rotateX: left.rotateX, rotateY: left.rotateY, transformStyle: "preserve-3d" }}
-            className={`${panel} aspect-[3/4] md:aspect-auto md:h-[78vh] md:min-h-130`}
+            initial={{ x: -40 }}
+            animate={{ x: 0 }}
+            transition={{ duration: 0.8, delay: 0.15, ease: EASE }}
+            className="aspect-[3/4] md:aspect-auto md:h-[78vh] md:min-h-130"
           >
-            <video
-              src="/media/hero-left.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover grayscale-25"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            <motion.div
+              style={{ rotateX: left.rotateX, rotateY: left.rotateY, transformStyle: "preserve-3d" }}
+              className={panel}
+            >
+              <video
+                src="/media/hero-left.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="absolute inset-0 w-full h-full object-cover grayscale-25"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            </motion.div>
           </motion.div>
 
           {/* Middle image */}
           <motion.div
-            initial={{ opacity: 0, y: 60, scale: 0.92 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            style={{ rotateX: middle.rotateX, rotateY: middle.rotateY, transformStyle: "preserve-3d" }}
-            className={`${panel} aspect-[3/4] md:aspect-auto md:h-[78vh] md:min-h-130 md:-mt-8 md:mb-8 z-10 order-first md:order-none`}
+            initial={{ y: 40 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.8, delay: 0.25, ease: EASE }}
+            className="aspect-[3/4] md:aspect-auto md:h-[78vh] md:min-h-130 -mt-2 mb-2 md:-mt-8 md:mb-8 z-10"
           >
-            <Image
-              src="/media/hero-arman.jpg"
-              alt="Arman in DN8 tracksuit"
-              fill
-              priority
-              sizes="(max-width: 768px) 100vw, 34vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-            <div className="absolute bottom-0 inset-x-0 p-6 md:p-8 text-center" style={{ transform: "translateZ(40px)" }}>
-              <Link
-                href="/collections"
-                className="inline-block px-8 py-3 md:px-10 md:py-3.5 rounded-full bg-foreground text-background text-sm font-semibold uppercase tracking-wider hover:scale-105 active:scale-95 transition-transform"
+            <motion.div
+              style={{ rotateX: middle.rotateX, rotateY: middle.rotateY, transformStyle: "preserve-3d" }}
+              className={panel}
+            >
+              <Image
+                src="/media/hero-arman.jpg"
+                alt="Arman in DN8 tracksuit"
+                fill
+                priority
+                sizes="(max-width: 768px) 34vw, 34vw"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+              {/* CTA inside the panel — desktop only; on mobile it moves below the grid */}
+              <div
+                className="hidden md:block absolute bottom-0 inset-x-0 p-6 md:p-8 text-center"
+                style={{ transform: "translateZ(40px)" }}
               >
-                {t("hero.shopNow")}
-              </Link>
-            </div>
+                <Link
+                  href="/collections"
+                  className="inline-block px-8 py-3 md:px-10 md:py-3.5 rounded-full bg-foreground text-background text-sm font-semibold uppercase tracking-wider hover:scale-105 active:scale-95 transition-transform"
+                >
+                  {t("hero.shopNow")}
+                </Link>
+              </div>
+            </motion.div>
           </motion.div>
 
           {/* Right video */}
           <motion.div
-            initial={{ opacity: 0, x: 60, rotateY: -20 }}
-            animate={{ opacity: 1, x: 0, rotateY: 0 }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            style={{ rotateX: right.rotateX, rotateY: right.rotateY, transformStyle: "preserve-3d" }}
-            className={`${panel} aspect-[3/4] md:aspect-auto md:h-[78vh] md:min-h-130`}
+            initial={{ x: 40 }}
+            animate={{ x: 0 }}
+            transition={{ duration: 0.8, delay: 0.15, ease: EASE }}
+            className="aspect-[3/4] md:aspect-auto md:h-[78vh] md:min-h-130"
           >
-            <video
-              src="/media/hero-right.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover grayscale-25"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-            <p className="absolute bottom-4 inset-x-0 text-center text-xs uppercase tracking-[0.3em] text-white/70">
-              @dn8team
-            </p>
+            <motion.div
+              style={{ rotateX: right.rotateX, rotateY: right.rotateY, transformStyle: "preserve-3d" }}
+              className={panel}
+            >
+              <video
+                src="/media/hero-right.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="absolute inset-0 w-full h-full object-cover grayscale-25"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <p className="hidden md:block absolute bottom-4 inset-x-0 text-center text-xs uppercase tracking-[0.3em] text-white/70">
+                @dn8team
+              </p>
+            </motion.div>
           </motion.div>
+        </div>
+
+        {/* Mobile CTA below the 3-column grid */}
+        <div className="md:hidden mt-8 text-center">
+          <Link
+            href="/collections"
+            className="inline-block px-10 py-3.5 rounded-full bg-foreground text-background text-sm font-semibold uppercase tracking-wider active:scale-95 transition-transform"
+          >
+            {t("hero.shopNow")}
+          </Link>
         </div>
       </div>
     </section>
