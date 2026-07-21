@@ -20,7 +20,7 @@ export function BornToWin() {
   const letterSpace = useTransform(scrollYProgress, [0.2, 0.5], ["0.05em", "0.18em"]);
 
   return (
-    <section ref={ref} className="relative w-full h-[70vh] md:h-screen overflow-hidden">
+    <section ref={ref} className="relative w-full aspect-video md:aspect-auto md:h-screen overflow-hidden">
       <video
         src="/media/born-to-win.mp4"
         autoPlay

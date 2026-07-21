@@ -84,7 +84,7 @@ export function Hero() {
             animate={{ opacity: 1, x: 0, rotateY: 0 }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             style={{ rotateX: left.rotateX, rotateY: left.rotateY, transformStyle: "preserve-3d" }}
-            className={`${panel} hidden md:block md:h-[78vh] md:min-h-130`}
+            className={`${panel} aspect-[3/4] md:aspect-auto md:h-[78vh] md:min-h-130`}
           >
             <video
               src="/media/hero-left.mp4"
@@ -103,7 +103,7 @@ export function Hero() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
             style={{ rotateX: middle.rotateX, rotateY: middle.rotateY, transformStyle: "preserve-3d" }}
-            className={`${panel} aspect-[3/4] md:aspect-auto md:h-[78vh] md:min-h-130 md:-mt-8 md:mb-8 z-10`}
+            className={`${panel} aspect-[3/4] md:aspect-auto md:h-[78vh] md:min-h-130 md:-mt-8 md:mb-8 z-10 order-first md:order-none`}
           >
             <Image
               src="/media/hero-arman.jpg"

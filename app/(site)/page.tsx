@@ -13,12 +13,19 @@ export default async function Home() {
   return (
     <main className="flex-1">
       <Hero />
-      <BornToWin />
+      {/* Desktop: video band right after the hero */}
+      <div className="hidden md:block">
+        <BornToWin />
+      </div>
       <CollectionSection
         titleKey="home.newCollection"
         href="/collections/new-collection"
         products={newCollection}
       />
+      {/* Mobile: video band between the two collection sections */}
+      <div className="md:hidden">
+        <BornToWin />
+      </div>
       <CollectionSection
         titleKey="home.bestSellers"
         href="/collections/best-sellers"
